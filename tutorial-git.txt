@@ -1,0 +1,352 @@
+ESTABLECER NOMBRE DE USUARIO :
+kali@kali:~$ git config --global user.name "Miguel Mario"
+
+ESTABLECER CORREO ELECTRÓNICO PARA GIT:
+kali@kali:~$ git config --global user.email miguelmario.mf@gmail.com
+
+ESTABLECER EDITOR DE CODIGO DEFAULT PARA GIT:
+kali@kali:~$ git config --global core.editor "code --wait"
+
+ABRIR EN NUESTRO EDITOR DE CODIGO DEFAULT EL ARCHIVO DE CONFIGURACION GLOBAL DE GIT
+kali@kali:~$ git config --global -e
+
+ESTABLECER EL SALTO DE LINEA PARA LA CONFIGURACION DE GIT:
+	PARA LINUX O MAC TENEMOS QUE ESTABLECER EL PARAMETRO input
+	PARA WINDOWS TENEMOS QUE ESTABLECER EL PARAMETRO: true
+
+
+LINUX=> kali@kali:~$ git config --global core.autocrlf input
+WINDOWS cmd: kali@kali:~$ git config --global core.autocrlf true
+
+INICIALIZAR UN REPOSITORIO DE GIT PARA NUESTRO PROYECTO:
+	1\TENEMOS QUE SITUARNOS EN LA CARPETA DEL PROYECTO QUE QUERAMOS:
+		kali@kali:~$ cd LARUTA/CARPETA_DE_NUESTRO_PROYECTO
+	2\TRAS SITUARNOS EN NUESTRA CARPETA DESEADA UTILIZAMOS EL COMANDO git init:
+		kali@kali:~$ git init	
+
+UNA VEZ INICIADO EL REPOSITORIO DE GIT PARA NUESTRO PROYECTO PODEMOS EMPEZAR A AÑADIR LOS DIFERENTES ARCHIVOS QUE QUERAMOS AÑADIR A NUESTRO REPOSITORIO:
+	
+	GIT FUNCIONA MEDIANTE DOS ETAPAS:
+		LA PRIMERA DE ELLAS ES LA ETAPA STAGE, LA CUAL SERÁ UNA ETAPA INTERMEDIA ANTES DE SUBIR LOS ARCHIVOS AL REPOSITORIO OFICIALMENTE
+			PARA AÑADIR ARCHIVOS A LA ETAPA STAGE SE USA EL SIGUIENTE COMANDO:
+				IMAGINEMOS QUE NUESTRO PROYECTO TIENE LAS SIGUIENTES CARPETAS Y ARCHIVOS:
+				kali@kali:~$ ls
+				main databases main.py controller.py config.py 
+				AHORA NOSOTROS QUEREMOS AÑADIR EL ARCHIVO controller.py y EL ARCHIVO config.py A LA ETAPA STAGE, PARA ELLO HAREMOS LO SIGUIENTE:
+				kali@kali:~$ git add controller.py config.py
+				COMO VEMOS HEMOS USADO EL COMANDO git add SEGUIDO DEL NOMBRE DE CADA UNO DE LOS ARCHIVOS QUE QUEREMOS SUBIR A LA ETAPA STAGE,
+				CADA UNO DE ELLOS CON SU NOMBRE Y EXTENSIÓN SEPARADOS POR UN ESPACIO
+			
+			PARA COMPROBAR EL ESTADO DE NUESTROS CAMBIOS PODEMOS USAR EL COMANDO git status, EL CUAL NOS DEVOLVERÁ EL ESTADO DE LOS ARCHIVOS QUE HEMOS 
+			AÑADIDO A LA ETAPA STAGE Y LOS QUE AUN NO HEMOS AÑADIDO A ESTA ETAPA, SI NOSOTROS HABIENDO YA AÑADIDO ALGUN ARCHIVO A ESTA ETAPA, HACEMOS 
+			HACEMOS ALGUN CAMBIO EN ALGUNO DE ELLOS, EL git status, NOS DEVOLVERÁ LA INFORMACION DE QUE LO HEMOS MODIFICADO Y POR TANTO TENDREMOS QUE
+			O BIEN VOLVER A CARGARLO MEDIANTE git add nombredelarchivo.extension, O BIEN ELIMINAR LOS CAMBIOS MEDIANTE EL COMANDO git restore nombredelarchivo.extension
+
+			
+			SI QUEREMOS QUITAR ALGUNO DE LOS ARCHIVOS DE LA ETAPA DE STAGE PODEMOS USAR EL SIGUIENTE COMANDO:
+			kali@kali:~$ git rm -cached nombredelarchivo.extension
+			DE ESTA MANERA ESE ARCHIVO SALDRÁ DE LA ETAPA STAGE
+
+			PARA COMPROBAR LOS CAMBIOS ENTRE UN ARCHIVO QUE YA ESTANDO EN LA ETAPA COMMITED Y EL MISMO ARCHIVO MODIFICADO USAMOS EL COMANDO git diff
+			kali@kali:~$ git diff
+			ESTO NOS MOSTRARÁ LOS CAMBIOS EN EL ARCHIVO RESPECTO AL MISMO ARCHIVO QUE YA ESTA EN LA ETAPA COMMITED Y EL MISMO ARCHIVO QUE AUN NO HA PASADO A LA ETAPA STAGED
+			AHORA SI QUEREMOS VER ESA DIFERENCIA ENTRE EL ARCHIVO EN COMMITED Y EL DE LA ETAPA STAGED USAMOS EL COMANDO git diff --staged
+			kali@kali:~$ git diff --staged
+
+			PARA SALIR DE ESTA PANTALLA USAMOS LA TECLA Q...
+
+			PARA REVISAR EL HISTORIAL DE TODO NUESTRO REPOSITORIO PODEMOS USAR EL COMANDO git log, EL CUAL NOS MUESTRA TODO EL HISTORIAL DESDE EL PRINCIPIO
+														
+							kali@kali:~/Documents/git/my_git_first$ git log
+							commit 46ec05842c4e9ea1405f957dce0ad392ab40d652 (HEAD -> master)
+							Author: Miguel Mario <miguelmario.mf@gmail.com>
+							Date:   Wed Jul 6 11:09:45 2022 +0200
+
+							    Primer Commit
+
+			PARA HACER ESTO MISMO PERO CON UN IDENTIFICADOR UNICO DE CADA UNO DE LAS MODIFICACIONES QUE HEMOS REALIZADO VAMOS A USAR EL COMANDO git log --oneline
+			
+							kali@kali:~/Documents/git/my_git_first$ git log --oneline
+							46ec058 (HEAD -> master) Primer Commit
+
+GIT FUNCIONA POR RAMAS, ESTA ES UNA DE SUS PRINCIPALES CARACTERISTICAS, ESTO NOS PROPORCIONA GRAN FACILIDAD PARA MODIFICAR CODIGO DE UN MISMO ARCHIVO SIN COMPROMETER
+TODO EL TRABAJO REALIZADO POR DIFERENTES DESARROLLADORES, DE MODO QUE DOS PERSONAS A LA VEZ PUEDEN ESTAR MODIFICANDO UN MISMO ARCHIVO SIN DIGAMOS BORRAR EL TRABAJO DEL OTRO
+
+			PARA COMPROBAR LA RAMA EN LA QUE ESTAMOS TRABAJANDO ACTUALMENTE UTILIZAMOS EL COMANDO git branch:
+			
+				kali@kali:~/Documents/git/my_git_first$ git branch
+				* master
+			
+			NORMALMENTE EN LA RAMA MAIN DEBEN ESTAR SOLO LOS ARCHIVOS QUE YA SON FUNCIONALES PARA NUESTRO SOFTWARE, ES DECIR QUE NO TENGA ERRORES DE NINGUN TIPO Y QUE NORMALMENTE
+			NO VAYAMOS A TENER QUE MODIFICAR ESTE CODIGO, SINO QUE SIMPLEMENTE QUERAMOS AÑADIR MAS CODIGO AL YA EXISTENTE, DE MODO QUE LA FORMA DE TRABAJAR ES LA SIGUIENTE:
+				1\CREAMOS NUESTRO ARCHIVO HACEMOS LAS DIFERENTES MODIFICACIONES SOBRE EL, CUANDO ESTE SEA LIMPIO DE ERRORES Y SEPAMOS QUE LO YA ESCRITO NO SE VA A MODIFICAR
+				LO AÑADIREMOS A LA RAMA MAIN Y DESDE AHI CREAREMOS OTRAS RAMAS DONDE HAREMOS DIFERENTES MODIFICACIONES DE ESE MISMO ARCHIVO QUE DARÁN FUNCIONALIDAD DIFERENTE A 
+				NUESTRO SOFTWARE, CUANDO TERMINEMOS DE AÑADIR ESA FUNCIONALIDAD Y SEPAMOS QUE ESTA LIBRE DE ERRORES Y TENGAMOS LA CERTEZA DE NO TENER QUE MODIFICARLO MÁS LO UNIMOS
+				AL ARCHIVO QUE YA TENIAMOS EN LA RAMA PRINCIPAL, DE ESTA FORMA PODEMOS EVITAR BORRAR CODIGO CRITICO PARA EL FUNCIONAMIENTO DE NUESTRO SOFTWARE
+
+			PARA CAMBIAR DE LA RAMA DE TRABAJO ACTUAL A OTRA USAMOS EL COMANDO git checkout -b nombre_de_la_rama_a_la_que_queremos_acceder
+
+					kali@kali:~/Documents/git/my_git_first$ git checkout -b NO_stable_0001
+					Switched to a new branch 'NO_stable_0001'
+			
+			SI AL UTILIZAR ESTE COMANDO INTRODUCIMOS EL NOMBRE DE UNA RAMA NO EXISTENTE GIT CREARA UNA NUEVA RAMA CON ESE NOMBRE
+			AHORA SI UTILIZAMOS EL COMANDO git branch, VEREMOS TODAS LAS RAMAS QUE TENEMOS EN NUESTRO PROYECTO Y CON UN ASTERISCO DELANTE
+			NOS MOSTRARÁ LA RAMA SOBRE LA QUE ESTAMOS TRABAJANDO
+
+					kali@kali:~/Documents/git/my_git_first$ git branch
+					* NO_stable_0001
+					  master
+
+			AHORA VAMOS MEDIANTE ESTE EJEMPLO A COMPROBAR QUE INICIALMENTE GUARDAMOS EL file_1.py y file_2.py COMO DEFINITIVOS EN LA RAMA MAIN
+			PERO HEMOS MODIFICADO EL file_2.py SOLO QUE ESTA MODIFICACION SOLO ESTA PRESENTE EN LA RAMA SECUNDARIA ANTERIORMENTE CREADA Y DE NOMBRE
+			NO_stable_0001...
+			
+				kali@kali:~/Documents/git/my_git_first$ git status
+				On branch NO_stable_0001
+				Changes not staged for commit:
+				  (use "git add <file>..." to update what will be committed)
+				  (use "git restore <file>..." to discard changes in working directory)
+				        modified:   file_2.py
+
+				Untracked files:
+				  (use "git add <file>..." to include in what will be committed)
+				        __pycache__/
+
+				no changes added to commit (use "git add" and/or "git commit -a")
+
+				kali@kali:~/Documents/git/my_git_first$ git add file_2.py
+				kali@kali:~/Documents/git/my_git_first$ git status
+
+				On branch NO_stable_0001
+				Changes to be committed:
+				  (use "git restore --staged <file>..." to unstage)
+				        modified:   file_2.py
+
+				Untracked files:
+				  (use "git add <file>..." to include in what will be committed)
+				        __pycache__/
+
+				kali@kali:~/Documents/git/my_git_first$ git status -s
+				M  file_2.py
+				?? __pycache__/
+
+				kali@kali:~/Documents/git/my_git_first$ git commit -m "Nueva funcionalidad calcular_cumpleaños añadida"
+				[NO_stable_0001 d5f4b9e] Nueva funcionalidad calcular_cumpleaños añadida
+				 1 file changed, 15 insertions(+), 5 deletions(-)
+				
+				AHORA VAMOS A IMPRIMIR POR PANTALLA LO QUE HAY EN EL ARCHIVO LLAMADO file_2 de la rama actual que es la NO_stable_0001
+				Y LUEGO IMPRIMIREMOS POR PANTALLA LO QUE HAY EN ESE MISMO ARCHIVO PERO EN LA RAMA main QUE EN NUESTRO CASO SE LLAMA master, PARA QUE VEAMOS COMO EN UNO ESTA 
+				LA VERSION INICIAL DEL file_2 Y EN LA OTRA RAMA ESTA LA VERSION NUEVA EN LA CUAL HEMOS AÑADIDO NUEVA FUNCIONALIDAD:
+
+				kali@kali:~/Documents/git/my_git_first$ git checkout master
+				Switched to branch 'master'
+											
+				kali@kali:~/Documents/git/my_git_first$ cat file_2.py 
+				#!/usr/bin/python
+
+				from file_1 import hola_mundo
+				
+				def saludar(nombre):
+				
+				    lista=hola_mundo()
+				    cad=""
+				    for d in lista:
+				        cad=cad+" "+d
+				    return f'{cad} {nombre}'
+				
+				print(saludar("Lucas"))
+
+				ESTE ES EL ARCHIVO file_2.py DE LA RAMA MAIN, ESTA FUE LA PRIMERA VERSION DE NUESTRO ARCHIVO GUARDADA EN LA RAMA MAIN
+				AHORA COMPROBAREMOS COMO ESTE ES COMPLETAMENTE DIFERENTE AL QUE TENEMOS EN LA RAMA NO_stable_0001:
+
+				kali@kali:~/Documents/git/my_git_first$ git checkout NO_stable_0001 
+				Switched to branch 'NO_stable_0001'
+				kali@kali:~/Documents/git/my_git_first$ cat file_2.py 
+				#!/usr/bin/python
+
+
+				from file_1 import hola_mundo
+				import datetime
+
+				def saludar(nombre):
+
+				    lista=hola_mundo()
+				    resultado=" ".join(lista)+" "+nombre
+				    return resultado
+
+				print(saludar("Lucas"))
+
+				def calcular_cumpleaños(fecha):
+				    hoy=datetime.datetime.now().strftime('%d/%m/%Y')
+				    hoy=hoy.split("/")
+				    fecha=fecha.split("/")
+				    resultado=f'Para tu {abs(int(hoy[2])-int(fecha[2]))} cumpleaños quedan {abs(int(hoy[1])-int(fecha[1]))} meses y {abs(int(hoy[0])-int(fecha[0]))} dias'
+				    return resultado
+
+
+				print(calcular_cumpleaños("02/07/1999"))
+
+
+				COMO PODEMOS COMPROBAR SON DIFERENTES, PERO EN ESTE CASO TAMBIEN PODEMOS VER QUE ADEMAS LO YA ESCRITO ANTERIORMENTE EN EL ARCHIVO file_2.py
+				HA SIDO COMPLETAMENTE CAMBIADO, ES DECIR SE HA CAMBIADO POR COMPLETO LA FUNCION QUE YA EXISTIA LLAMADA saludar() VEAMOSLO:
+
+				VERSION DE LA RAMA MAIN:
+
+				def saludar(nombre):
+				
+				    lista=hola_mundo()
+				    cad=""
+				    for d in lista:
+				        cad=cad+" "+d
+				    return f'{cad} {nombre}'
+
+				VERSION DE LA RAMA NO_stable_0001:
+
+				def saludar(nombre):
+
+				    lista=hola_mundo()
+				    resultado=" ".join(lista)+" "+nombre
+				    return resultado
+
+				COMO VEMOS ESTA FUNCION HA SIDO MODIFICADA, ESTO ES UNA MALA PRAXIS DEBIDO A QUE LO GUARDADO EN LA RAMA MAIN DEBE SER DEFINITIVOS
+				EL MOTIVO ES SENCILLO, PORQUE SI VARIOS PROGRAMADORES TRABAJAN EN EL MISMO ARCHIVO DESDE DIFERENTES RAMAS Y UNO DE ELLOS MODIFICA
+				ALGUNA PARTE DEL CODIGO QUE YA ERA DEFINITIVO (ESTABA GUARDADO EN LA RAMA MAIN) PODRIAN SURGIR ERRORES DE COMPATIBILIDAD CON EL restore
+				DE VERSIONES DE LAS MODIFICACIONES HECHAS POR EL RESTO DE PROGRAMADORES, ES DECIR PODRIAMOS GENERAR UN PROBLEMA GRAVE Y CUANDO HABLAMOS
+				DE PROYECTOS GRANDES CON GRANDES ARCHIVOS DE CODIGO ESTE TIPO DE DETALLES PUEDEN PROVOCARNOS UN QUEBRADERO DE CABEZA MUY GRANDE, DE MODO
+				QUE POR CONVENCIÓN CUANDO GUARDEMOS ALGO EN LA RAMA MAIN DEBE SER DEFINITIVO Y QUE LAS POSTERIORES MODIFICACIONES DE ESTE ARCHIVO EN LAS 
+				DIFERENTES RAMAS EXISTENTES SEAN MODIFICACIONES QUE AÑADAN LINEAS DE CODIGO Y FUNCIONALIDAD PERO QUE NO REESCRIBAN EL CODIGO YA EXISTENTE
+				PARA ASÍ EVITAR ESTOS FALLOS DE COMPATIBILIDAD Y POR SUPUESTO EVITAR INUTULIZAR EL TRABAJO DEL RESTO DE COMPAÑEROS QUE TRABAJAN EN EL PROYECTO
+
+				ES DECIR QUE NOSOTROS AL MODIFICAR EL ARCHIVO file_2 DEBERIAMOS HABER MANTENIDO LO YA ESCRITO DEBIDO A QUE ESTE YA SE ENCONTRABA EN LA RAMA 
+				MAIN, POR LO TANTO LA FUNCION EN ESTE CASO saludar() DEBERIA SER IGUAL EN AMBOS ARCHIVOS.
+
+				AHORA VAMOS A UNIFICAR AMBOS ARCHIVOS PARA AÑADIR DEFINITIVAMENTE LA FUNCIONALIDAD DADA A NUESTRO ARCHIVO DEFINITIVO EN LA RAMA MAIN
+				PARA ELLO NOS IREMOS A LA RAMA MAIN Y USAREMOS EL COMANDO git merge nombre_de_la_rama
+
+				ASI QUE PRIMERO COMPROBAMOS EN QUE RAMA ESTAMOS:
+
+				kali@kali:~/Documents/git/my_git_first$ git branch 
+				* NO_stable_0001
+				  master
+				
+				EL ASTERISCO NOS INDICA QUE ESTAMOS EN LA RAMA NO_stable_0001 Y PARA GUARDAR LOS CAMBIOS DEBEMOS ESTAR EN LA RAMA MAIN
+				ASI QUE NOS CAMBIAMOS DE RAMA:
+
+				kali@kali:~/Documents/git/my_git_first$ git checkout master
+				Switched to branch 'master'
+
+				UNA VEZ EN ESTA RAMA VAMOS A GUARDAR LOS CAMBIOS DEFINITIVOS PARA EL ARCHIVO DE NUESTRA RAMA MAIN:
+
+				kali@kali:~/Documents/git/my_git_first$ git merge NO_stable_0001 
+				Updating 46ec058..d5f4b9e
+				Fast-forward
+				 file_2.py | 20 +++++++++++++++-----
+				 1 file changed, 15 insertions(+), 5 deletions(-)
+
+				SI AHORA ESTANDO EN LA RAMA MAIN COMPROBAMOS EL CONTENIDO DE CODIGO DEL ARCHIVO file_2 VEREMOS QUE HA CAMBIADO
+				Y AHORA EL CONTENIDO ES EL QUE TENIAMOS EN LA RAMA NO_stable_0001:
+
+				kali@kali:~/Documents/git/my_git_first$ cat file_2.py 
+				#!/usr/bin/python
+
+
+				from file_1 import hola_mundo
+				import datetime
+
+				def saludar(nombre):
+
+				    lista=hola_mundo()
+				    resultado=" ".join(lista)+" "+nombre
+				    return resultado
+
+				print(saludar("Lucas"))
+
+				def calcular_cumpleaños(fecha):
+				    hoy=datetime.datetime.now().strftime('%d/%m/%Y')
+				    hoy=hoy.split("/")
+				    fecha=fecha.split("/")
+				    resultado=f'Para tu {abs(int(hoy[2])-int(fecha[2]))} cumpleaños quedan {abs(int(hoy[1])-int(fecha[1]))} meses y {abs(int(hoy[0])-int(fecha[0]))} dias'
+				    return resultado
+
+
+				print(calcular_cumpleaños("02/07/1999"))
+
+				PARA TERMINAR CON LA PARTE LOCAL DE GIT VAMOS A CAMBIAR EL NOMBRE DE UNA RAMA PARA ELLO TENEMOS DOS MANERAS DE HACERLO
+					1\SI EL NOMBRE DE LA RAMA QUE QUEREMOS CAMBIAR ES LA RAMA QUE TENEMOS ACTIVA ACTUALMENTE, COMPROBAMOS DE NUEVO EN QUE 
+					RAMA ESTAMOS:
+						kali@kali:~/Documents/git/my_git_first$ git branch
+  						NO_stable_0001
+						* master	
+
+						VEMOS QUE ESTAMOS EN LA RAMA master Y POR TANTO SI QUEREMOS CAMBIAR EL NOMBRE DE ESTA HAREMOS LO SIGUIENTE:
+						kali@kali:~/Documents/git/my_git_first$ git branch -m main
+
+						SI COMPROBAMOS AHORA LOS BRANCHS QUE TENEMOS ACTUALMENTE VEREMOS COMO HA CAMBIADO EL NOMBRE DE LA RAMA master A main:
+						kali@kali:~/Documents/git/my_git_first$ git branch
+  						NO_stable_0001
+						* main
+					2\ SI EL NOMBRE DE LA RAMA QUE QUEREMOS CAMBIAR NO ES LA RAMA QUE TENEMOS ACTIVA ACTUALMENTE, COMPROBAMOS DE NUEVO EN QUE RAMA
+					   ESTAMOS:
+					   kali@kali:~/Documents/git/my_git_first$ git branch
+  						NO_stable_0001
+						* main
+
+						VEMOS QUE ESTAMOS EN LA RAMA main QUE JUSTO ACABAMOS DE RENOMBRAR Y QUE ANTES SE LLAMABA master, IMAGINEMOS QUE AHORA QUEREMOS
+						CAMBIAR LA RAMA NO_stable_0001 Y PONERLE DE NOMBRE SUB_MAIN_0001:
+						kali@kali:~/Documents/git/my_git_first$ git branch -m NO_stable_0001 SUB_main_0001
+
+						SI COMPROBAMOS AHORA LOS BRANCHS QUE TENEMOS ACTUALMENTE VEREMOS COMO HA CAMBIADO EL NOMBRE DE LA RAMA NO_stable_0001 A SUB_main_0001:
+						kali@kali:~/Documents/git/my_git_first$ git branch 
+  						SUB_main_0001
+						* main
+
+				POR ULTIMO VAMOS A UTILIZAR github PARA GUARDAR NUESTRO REPOSITORIO DE MANERA ONLINE Y QUE ESTA ESTE DISPONIBLE DESDE CUALQUIER TERMINAL QUE QUIERA ACCEDER 
+				A ELLA, EN ESTE CASO USAREMOS github PERO CADA EMPRESA PUEDE UTILIZAR DIFERENTES FORMAS DE GUARDAR REPOSITORIOS Y QUE ESTOS ESTEN DISPONIBLES DE MANERA ONLINE
+				PARA EL RESTO DE PROGRAMADORES. PARA PROYECTOS PERSONALES LA MEJOR OPCION ES UTILIZAR github YA QUE ADEMAS NOS PERMITE GUARDAR REPOSITORIOS DE MANERA PUBLICA O 
+				PRIVADA.
+
+				PARA EMPEZAR TENEMOS QUE IRNOS AL SITIO WEB DE github E INICIAR SESION CON LA CUENTA EN LA QUE QUERAMOS SUBIR EL REPOSITORIO...
+				
+				UNA VEZ HECHO ESTO LE DAMOS  A CREAR NUEVO REPOSITORIO AQUI INTRODUCIMOS LA CONFIGURACION QUE DESEAMOS PARA NUESTRO NUEVO REPOSITORIO
+				
+				UNA VEZ HECHO ESTO NOS VAMOS DE NUEVO A LA TERMINAL Y AÑADIMOS A NUESTRO PROYECTO LA OPCION DE SUBIR CONTENIDO DESDE NUESTRO PROYECTO LOCAL
+				A NUESTRO REPOSITORIO ONLINE GESTIONADO POR github:
+
+				kali@kali:~/Documents/git/my_git_first$ git remote add origin git@github.com:miguelmariomf/tutorial-git.git
+
+				ESTE COMANDO NOS LO INDICARA EL PROPIO github EN EL PROCESO DE CREACION DESDE LA WEBSITE
+
+				AHORA USAREMOS EL COMANDO git push PARA INDICAR QUE QUEREMOS SUBIR NUESTROS CAMBIOS LOS CUALES SERAN LOS RESPECTIVOS A LA RAMA DONDE ESTEMOS TRABAJANDO
+				PERO SIN EMBARGO EN EL REPOSITORIO QUE HEMOS CREADO EN LA WEBSITE DE github NO EXISTEN RAMAS AUN POR TANTO MEDIANTE LOS PARAMENTROS -u origin nombre_rama_que
+				queremos_crear HAREMOS QUE SE CREE ESTA RAMA EN EL REPOSITORIO ONLINE Y QUE EN ELLA SE SUBA TODO A LO QUE LE HEMOS HECHO COMMITED EN LA RAMA ACTUAL:
+
+				kali@kali:~/Documents/git/my_git_first$ git push -u origin main
+				Enter passphrase for key 'RUTA-LLAVE-PUBLICA-SSH-AÑADIDA-EN-GITHUB': 
+				Enter passphrase for key 'RUTA-LLAVE-PUBLICA-SSH-AÑADIDA-EN-GITHUB': 
+				Enumerating objects: 7, done.
+				Counting objects: 100% (7/7), done.
+				Delta compression using up to 4 threads
+				Compressing objects: 100% (7/7), done.
+				Writing objects: 100% (7/7), 1.01 KiB | 172.00 KiB/s, done.
+				Total 7 (delta 0), reused 0 (delta 0), pack-reused 0
+				To github.com:miguelmariomf/tutorial-git.git
+				 * [new branch]      main -> main
+				branch 'main' set up to track 'origin/main'
+
+				PARA SUBIR ARCHIVOS DESDE NUESTRO PC AL REPOSITORIO ONLINE NECESITAREMOS UNA SSH-KEY PUBLICA Y AUTORIZADA EN github...
+				TAMBIEN A VECES PODEMOS GENERAR DESDE LA WEBSITE DE github UN TOKEN CONCRETO PARA HACERLO.
+
+				UNA VEZ HECHO ESTO PODEMOS ACTUALIZAR EL REPOSITORIO ONLINE UTILIZANDO EL COMANDO git push. PERO HAY QUE TENER EN CUENTA QUE ESTO
+				SUBIRÁ TODOS LOS COMMITED HECHOS EN LA RAMA QUE NOS ENCONTREMOS ACTUALMENTE TRABAJANDO A LA RAMA ANTERIORMENTE CREADA ONLINE
+				SI QUEREMOS ACTUALIZAR LOS CAMBIOS HECHOS EN ESOS MISMOS ARCHIVOS YA SUBIDOS SIMPLEMENTE UTILIZAMOS git push
+				SIN EMBARGO SI QUEREMOS SUBIR OTROS ARCHIVOS A UNA RAMA DIFERENTE TENDREMOS QUE USAR DE NUEVO EL COMANDO git push -u origin nombre_rama
+
+				PARA ELLO VAMOS AÑADIR ESTE DOCUMENTO A UNA NUEVA RAMA EN NUESTRO REPOSITORIO ONLINE:
+				
+
+
+
+
+
+
+
